@@ -26,8 +26,9 @@ def display_info(predict_hash, printer)
 end
 
 def find_routes(routes_array)
-    routes = []
-    routes_array.each { |route| routes << Muni::Route.find(route)}
+    routes = routes_array.reduce([]) do |r_array, route|
+        r_array << Muni::Route.find(route)
+    end
     return routes
 end
 

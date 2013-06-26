@@ -1,19 +1,19 @@
 require 'rubygems' # or use Bundler.setup
 require 'eventmachine'
 require 'muni'
-require_relative 'printers'
+require 'psych'
+require_relative 'muni_fetcher/printers'
 
-MY_STOP = "hayes and shrader"
-FILE_PATH = "./bustime.txt"
-SOCKET_PATH = "/tmp/arduino.sock"
-MINUTES = 60
-DISPLAY_REFRESH_RATE = MINUTES / 2
-FETCH_RATE = 1 * MINUTES
+begin
+    conf = Psych.load_file('muni_fetcher.yml')
+rescue Errno::ENOENT
+    puts 'yml configuration not found'
+end
 
 def fetch_data(routes, stop)
     predict_hash = {}
     routes.each do |route|
-        predict_hash[route.title] = route.inbound.stop_at(MY_STOP).predictions.map(&:minutes)
+        predict_hash[route.title] = route.inbound.stop_at(stop).predictions.map(&:minutes)
     end
     return predict_hash
 end
@@ -34,12 +34,12 @@ end
 EventMachine.run do
     prediction_data = {}
     routes = find_routes [47, 45]
-    np = ENV['rdebug']? StdoutPrinter.new : SocketPrinter.new(SOCKET_PATH)
+    np = ENV['rdebug']? StdoutPrinter.new : SocketPrinter.new(conf['socket_path'])
     # First run
-    prediction_data = fetch_data(routes, MY_STOP)
+    prediction_data = fetch_data(routes, conf['my_stop'])
     display_info(prediction_data, np)
 
     # Set timers
-    EventMachine.add_periodic_timer(DISPLAY_REFRESH_RATE, Proc.new { display_info(prediction_data, np) })
-    EventMachine.add_periodic_timer(FETCH_RATE, Proc.new { prediction_data = fetch_data(routes, MY_STOP) })
+    EventMachine.add_periodic_timer(conf['display_refresh_rate'], Proc.new { display_info(prediction_data, np) })
+    EventMachine.add_periodic_timer(conf['fetch_rate'], Proc.new { prediction_data = fetch_data(routes, conf['my_stop']) })
 end

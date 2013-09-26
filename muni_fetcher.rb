@@ -35,7 +35,7 @@ end
 EventMachine.run do
     prediction_data = {}
     routes = find_routes [47, 45]
-    np = ENV['rdebug']? StdoutPrinter.new : SocketPrinter.new(conf['socket_path'])
+    np = RedisPrinter.new
     # First run
     prediction_data = fetch_data(routes, conf['my_stop'])
     display_info(prediction_data, np)

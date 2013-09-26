@@ -1,3 +1,6 @@
+require 'redis'
+require 'json'
+
 module Printer
     def print_hash(predict_hash)
         predict_hash.keys.each do |key|
@@ -18,6 +21,23 @@ class StdoutPrinter
     end
     def print(msg)
         puts msg
+    end
+end
+
+class RedisPrinter
+    include Printer
+    def initialize
+        @redis = Redis.new
+        @redis.del 'status_msgs'
+    end
+    def print(msg)
+        if @redis.llen('status_msgs').to_i > 9
+            @redis.del 'status_msgs'
+        end
+        color = ['steel', 'darko', 'scorcho', 'fuzz', 'oxide', 'rust'].sample
+        json_thing = {'info'=> msg, 'color' => color}
+        @redis.lpush('status_msgs', JSON.dump(json_thing))
+        @redis.publish('statuses', 'ok')
     end
 end
 

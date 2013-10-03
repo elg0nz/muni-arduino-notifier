@@ -26,8 +26,8 @@ end
 
 class RedisPrinter
     include Printer
-    def initialize
-        @redis = Redis.new
+    def initialize(options)
+        @redis = Redis.new(options)
         @redis.del 'status_msgs'
     end
     def print(msg)

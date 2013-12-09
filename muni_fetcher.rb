@@ -48,12 +48,12 @@ EventMachine.run do
     prediction_data = {}
     routes = find_routes conf['routes']
     redis_conf = conf['redis']
-    np = RedisPrinter.new(:host => redis_conf['host'], :port => redis_conf['port'], :password => redis_conf['password'])
+    printer = RedisPrinter.new(:host => redis_conf['host'], :port => redis_conf['port'], :password => redis_conf['password'])
     # First run
     prediction_data = fetch_data(routes, conf['my_stop'])
-    display_info(prediction_data, np)
+    display_info(prediction_data, printer)
 
     # Set timers
-    EventMachine.add_periodic_timer(conf['display_refresh_rate'], Proc.new { display_info(prediction_data, np) })
+    EventMachine.add_periodic_timer(conf['display_refresh_rate'], Proc.new { display_info(prediction_data, printer) })
     EventMachine.add_periodic_timer(conf['fetch_rate'], Proc.new { prediction_data = fetch_data(routes, conf['my_stop']) })
 end

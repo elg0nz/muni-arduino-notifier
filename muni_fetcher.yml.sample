@@ -1,6 +1,6 @@
 my_stop: "hayes and shrader"
+routes: [{'route': 45, 'direction': 'inbound'}, {'route': 45, 'direction': 'outbound'}]
 file_path: "./bustime.txt"
 socket_path: "/tmp/arduino.sock"
-minutes: 60
 display_refresh_rate: 30
 fetch_rate: 60

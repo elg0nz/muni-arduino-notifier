@@ -12,10 +12,20 @@ end
 
 def fetch_data(routes, stop)
     predict_hash = {}
-    routes.each do |route|
-        predict_hash[route.title] = route.inbound.stop_at(stop).predictions.map(&:minutes)
+    routes.each do |route, direction|
+        hash_title = "#{route.title}-#{direction}"
+        predict_hash[hash_title] = get_predictions(route, stop, direction)
     end
     return predict_hash
+end
+
+def get_predictions(route, stop, direction)
+    if direction == 'inbound'
+        predictions = route.inbound.stop_at(stop).predictions.map(&:minutes)
+    else
+        predictions = route.outbound.stop_at(stop).predictions.map(&:minutes)
+    end
+    return predictions
 end
 
 def display_info(predict_hash, printer)
@@ -26,15 +36,17 @@ def display_info(predict_hash, printer)
 end
 
 def find_routes(routes_array)
-    routes = routes_array.reduce([]) do |r_array, route|
-        r_array << Muni::Route.find(route)
+    routes = routes_array.reduce([]) do |r_array, route_hash|
+        route = Muni::Route.find(route_hash['route'])
+        direction = route_hash['direction']
+        r_array << [route, direction]
     end
     return routes
 end
 
 EventMachine.run do
     prediction_data = {}
-    routes = find_routes [47, 45]
+    routes = find_routes conf['routes']
     redis_conf = conf['redis']
     np = RedisPrinter.new(:host => redis_conf['host'], :port => redis_conf['port'], :password => redis_conf['password'])
     # First run

@@ -28,7 +28,7 @@ class RedisPrinter
     include Printer
     def initialize(options)
         @redis = Redis.new(options)
-        @lset_name = options['lset_name']
+        @lset_name = options[:lset_name]
         @redis.del @lset_name
     end
     def print(msg)

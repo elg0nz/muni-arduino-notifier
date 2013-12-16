@@ -28,15 +28,13 @@ class RedisPrinter
     include Printer
     def initialize(options)
         @redis = Redis.new(options)
-        @redis.del 'status_msgs'
+        @lset_name = options['lset_name']
+        @redis.del @lset_name
     end
     def print(msg)
-        if @redis.llen('status_msgs').to_i > 9
-            @redis.del 'status_msgs'
-        end
         color = ['steel', 'darko', 'scorcho', 'fuzz', 'oxide', 'rust'].sample
         json_thing = {'info'=> msg, 'color' => color}
-        @redis.lpush('status_msgs', JSON.dump(json_thing))
+        @redis.lpush(@lset_name, JSON.dump(json_thing))
         @redis.publish('statuses', 'ok')
     end
 end

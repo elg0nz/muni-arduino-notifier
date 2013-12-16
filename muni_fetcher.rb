@@ -48,7 +48,9 @@ EventMachine.run do
     prediction_data = {}
     routes = find_routes conf['routes']
     redis_conf = conf['redis']
-    printer = RedisPrinter.new(:host => redis_conf['host'], :port => redis_conf['port'], :password => redis_conf['password'])
+    # TODO: change lset_name to the stop name.
+    lset_name = 'status_msgs'
+    printer = RedisPrinter.new(:host => redis_conf['host'], :port => redis_conf['port'], :password => redis_conf['password'], :lset_name => lset_name)
     # First run
     prediction_data = fetch_data(routes, conf['my_stop'])
     display_info(prediction_data, printer)

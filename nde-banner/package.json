@@ -1,0 +1,20 @@
+{
+  "name": "nde-banner",
+  "version": "0.0.0",
+  "description": "Websocket to Arduino client.",
+  "main": "websocket_client.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "keywords": [
+    "websocket",
+    "arduino"
+  ],
+  "author": "Gonzalo Maldonado",
+  "license": "BSD",
+  "dependencies": {
+    "socket.io": "~0.9.16"
+    "socket.io-client": "~1.0.0-pre"
+  }
+}

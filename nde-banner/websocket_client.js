@@ -5,9 +5,9 @@ var io   = require('socket.io-client')
 var get_subscriptions = function(data){
   console.log(data);
   http.get(host, function (res) {
-      res.on('data', function (chunk) { console.log('response:' + chunk); });
+    res.on('data', function (chunk) { console.log('' + chunk); });
   }).on('error', function (e) {
-      console.log("Got error: " + e.message);
+    console.log("Got error: " + e.message);
   });
 };
 

@@ -4,7 +4,9 @@ var app = require('http').createServer(handler)
 app.listen(8080);
 
 io.sockets.on('connection', function (socket) {
-    socket.emit('channels-updated', ['45-INBOUND-20TH&POTRERO', '33-INBOUND-20TH&BRYANT']);
+    setTimeout(function() {
+        socket.emit('channels-updated', ['45-INBOUND-20TH&POTRERO', '33-INBOUND-20TH&BRYANT']);
+    }, 1500);
 });
 
 function handler (req, res) {

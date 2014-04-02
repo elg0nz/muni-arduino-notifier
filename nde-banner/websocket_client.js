@@ -37,6 +37,7 @@ var get_subscriptions = function (update) {
 
 var display_response = function (channel, chunk) {
   var data = JSON.parse(chunk);
+  console.log(data);
   var msg = data["msg"];
   var source = data["source"];
 

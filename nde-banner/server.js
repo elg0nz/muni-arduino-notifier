@@ -1,11 +1,15 @@
 var handler = function (req, res) {
-   var msg = '{ "msg": "45 in 3 and 8", "last_updated": "sometime" }';
+   var channel = url.parse(req.url).path;
+   var msg = "BUS in 3 and 8";
+   var doc = {"channel": channel, "msg": msg,"last_updated":"sometime"}
+   var msg = JSON.stringify(doc);
    res.writeHead(200);
    res.end(msg);
 };
 
-var app = require('http').createServer(handler)
-  , io = require('socket.io').listen(app);
+var url  = require('url')
+  , app  = require('http').createServer(handler)
+  , io   = require('socket.io').listen(app);
 
 app.listen(8080);
 

@@ -38,9 +38,9 @@ var get_subscriptions = function (update) {
 var display_response = function (channel, chunk) {
   var data = JSON.parse(chunk);
   var msg = data["msg"];
-  var channel = data["channel"];
+  var source = data["source"];
 
-  var output = util.format('%s: %s', channel, msg);
+  var output = util.format('%s: %s', source, msg);
   console.log(output);
   serialPort.write(output + "\r\n");
 };

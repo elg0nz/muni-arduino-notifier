@@ -4,6 +4,14 @@ var io   = require('socket.io-client')
   , http = require('http')
   , util = require('util');
 
+var serialport = require("serialport")
+  , SerialPort = serialport.SerialPort
+  , TTYPATH    = '/dev/ttyACM0';
+
+var serialPort = new SerialPort(TTYPATH, {
+    baudrate: 9600
+});
+
 try {
   var config           = require('./config.yml')
     , host             = config['host']
@@ -33,6 +41,7 @@ var display_response = function (channel, chunk) {
 
   var output = util.format('%s: %s', channel, msg);
   console.log(output);
+  serialPort.write(output + "\r\n");
 };
 
 var process_channel = function (channel) {
@@ -50,4 +59,10 @@ var socket = io.connect(host);
 socket.on('connect', function () {
   console.log("socket connected");
   socket.on('channels-updated', get_subscriptions);
+});
+
+socket.on('disconnect', function () {
+  console.log('server disconnected');
+  serialPort.close();
+  process.exit();
 });

@@ -14,6 +14,7 @@
   "author": "Gonzalo Maldonado",
   "license": "BSD",
   "dependencies": {
+    "js-yaml": "~1.0.0",
     "socket.io": "~1.0.0",
     "socket.io-client": "~1.0.0-pre",
     "serialport": "~1.3.1"

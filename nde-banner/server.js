@@ -15,6 +15,6 @@ app.listen(8080);
 
 io.sockets.on('connection', function (socket) {
    setInterval(function() {
-     socket.emit('channels-updated', ['45-INBOUND-20TH&POTRERO', '33-INBOUND-20TH&BRYANT']);
+     socket.emit('channels-updated', ['45-INBOUND-20TH&POTRERO', '33-INBOUND-20TH&BRYANT', '49-INBOUND-24&MISSION']);
    }, 1500);
 });

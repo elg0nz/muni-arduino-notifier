@@ -29,7 +29,8 @@ var channel_enabled = function (channel) {
   }
 };
 
-var get_subscriptions = function (channels) {
+var get_subscriptions = function (update) {
+  var channels = JSON.parse(update);
   var filtered_channels = channels.filter(channel_enabled);
   filtered_channels.forEach(process_channel);
 };

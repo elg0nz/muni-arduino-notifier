@@ -1,0 +1,2 @@
+host: 'http://localhost:8080'
+enabled_channels: ["45-INBOUND-20TH&POTRERO", "33-INBOUND-20TH&BRYANT"]

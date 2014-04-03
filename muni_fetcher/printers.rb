@@ -28,14 +28,20 @@ class RedisPrinter
     include Printer
     def initialize(options)
         @redis = Redis.new(options)
-        @lset_name = options[:lset_name]
         @redis.del @lset_name
     end
-    def print(msg)
-        color = ['steel', 'darko', 'scorcho', 'fuzz', 'oxide', 'rust'].sample
-        json_thing = {'info'=> msg, 'color' => color}
-        @redis.lpush(@lset_name, JSON.dump(json_thing))
-        @redis.publish('statuses', 'ok')
+
+    def publish(key, value, time_str)
+        predictions = value.map(&:to_i).join(", ")
+        doc = JSON.dump({
+            "channel"   => key,
+            "msg"       => predictions,
+            "source"    => key,
+            "last_Updated" => time_str
+        })
+        @redis.set(key, doc)
+        @redis.publish("channels-updated", "[\"#{key}\"]")
+        puts "channels-updated"
     end
 end
 

@@ -10,10 +10,12 @@ rescue Errno::ENOENT
     puts 'yml configuration not found'
 end
 
-def fetch_data(routes, stop)
+def fetch_data(routes, stop_str)
     predict_hash = {}
+    stop = stop_str.gsub(/ /, "-")
     routes.each do |route, direction|
-        hash_title = "#{route.title}-#{direction}"
+        title = route.title.gsub(/ /, "-")
+        hash_title = "#{title}-#{direction}-#{stop}"
         predict_hash[hash_title] = get_predictions(route, stop, direction)
     end
     return predict_hash
@@ -30,9 +32,11 @@ end
 
 def display_info(predict_hash, printer)
     t = Time.now
-    time_str = t.strftime("The time is: %H:%M")
-    printer.print_time(time_str)
-    printer.print_hash(predict_hash)
+    time_str = t.strftime("%H:%M")
+
+    predict_hash.each_pair do |key, value|
+        printer.publish(key, value, time_str)
+    end
 end
 
 def find_routes(routes_array)
@@ -50,7 +54,7 @@ EventMachine.run do
     redis_conf = conf['redis']
     # TODO: change lset_name to the stop name.
     lset_name = 'status_msgs'
-    printer = RedisPrinter.new(:host => redis_conf['host'], :port => redis_conf['port'], :password => redis_conf['password'], :lset_name => lset_name)
+    printer = RedisPrinter.new(:host => redis_conf['host'], :port => redis_conf['port'], :password => redis_conf['password'])
     # First run
     prediction_data = fetch_data(routes, conf['my_stop'])
     display_info(prediction_data, printer)

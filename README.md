@@ -1,3 +1,4 @@
+[![Code Climate](https://codeclimate.com/github/elg0nz/muni-arduino-notifier/badges/gpa.svg)](https://codeclimate.com/github/elg0nz/muni-arduino-notifier)
 # Muni Arduino Notifier
 Fetches bus stops from Nextbus and displays them in a lolshield.
 
